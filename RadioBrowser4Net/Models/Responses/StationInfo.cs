@@ -35,8 +35,10 @@ namespace RadioBrowser4Net.Models.Responses
 
 		[JsonPropertyName("favicon")]
         public string FaviconRaw { get; set; }
+
         [JsonIgnore]
-        public Uri Favicon => new Uri(FaviconRaw);
+        public Uri? Favicon
+	        => Uri.TryCreate(FaviconRaw, UriKind.Absolute, out var uri) ? uri : null;
 
 	    [JsonPropertyName("tags")]
 		public string TagsRaw { get; set; }

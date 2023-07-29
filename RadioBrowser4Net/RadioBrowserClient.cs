@@ -9,7 +9,6 @@ using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Web;
 using RadioBrowser4Net.Internals;
@@ -20,19 +19,19 @@ using RadioBrowser4Net.Models.Responses.Actions;
 
 namespace RadioBrowser4Net
 {
-    public sealed class RadioBrowserClient
+	public sealed class RadioBrowserClient
 	{
 		private readonly HttpClient _httpClient;
-		private readonly string _assemblyVersion = 
+		private readonly string _assemblyVersion =
 			Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
 		public RadioBrowserClient(
-			string? appUrl = null, 
+			string? appUrl = null,
 			string? customUserAgent = null,
 			TimeSpan? timeout = null,
 			bool useJson = true)
 		{
-			var basePath = 
+			var basePath =
 				$"https://{appUrl ?? GetRadioBrowserApiUrl()}/{(useJson ? "json" : "xml")}/";
 
 			var userAgent = customUserAgent ?? $"RadioBrowser4Net/{_assemblyVersion}";
@@ -69,7 +68,7 @@ namespace RadioBrowser4Net
 		public async Task<List<StationInfo>?> ListStations(StationsListParams listParams, StationsSearchBy searchBy,
 			string searchTerm)
 			=> await ListRequest<StationInfo>($"stations/by{searchBy.ToString().ToLower()}", listParams, searchTerm);
-		
+
 		public async Task<List<StationInfo>?> ListAllStations(StationsListParams listParams)
 			=> await ListRequest<StationInfo>($"stations", listParams, null);
 
@@ -128,6 +127,16 @@ namespace RadioBrowser4Net
 		private static string PropertyToQueryParam(PropertyInfo property, object obj)
 		{
 			var propertyType = property.PropertyType;
+
+			//handle nullable types
+			{
+				var nullableUnderlyingType = Nullable.GetUnderlyingType(propertyType);
+				if (nullableUnderlyingType != null)
+				{
+					propertyType = nullableUnderlyingType;
+				}
+			}
+
 			var propertyValue = property.GetValue(obj, null);
 
 			var nameAttribute = property.GetCustomAttributes(true)
@@ -141,7 +150,7 @@ namespace RadioBrowser4Net
 				paramValue = GetEnumName(propertyType, propertyValue);
 			}
 			else if (propertyType.IsGenericType &&
-			         propertyType.GetGenericTypeDefinition() == typeof(List<>))
+					 propertyType.GetGenericTypeDefinition() == typeof(List<>))
 			{
 				var objList = (IList)propertyValue;
 				var sb = new StringBuilder();
@@ -152,7 +161,7 @@ namespace RadioBrowser4Net
 			else
 			{
 				paramValue = propertyValue.ToString();
-				if (propertyType == typeof(bool))
+				if (propertyType == typeof(bool) || (propertyType == typeof(bool?)))
 					paramValue = paramValue.ToLower();
 			}
 
@@ -164,7 +173,7 @@ namespace RadioBrowser4Net
 			if (!enumType.IsEnum)
 				throw new ArgumentException("Provided type is not an enum type", nameof(enumType));
 			var fallbackName = enumValue.ToString().ToLower();
-			
+
 			var name = Enum.GetName(enumType, enumValue);
 			if (name == null) return fallbackName;
 
@@ -190,8 +199,8 @@ namespace RadioBrowser4Net
 			{
 				var reply = new Ping().Send(ipAddress);
 				if (reply == null ||
-				    reply.RoundtripTime >= lastRoundTripTime) continue;
-				
+					reply.RoundtripTime >= lastRoundTripTime) continue;
+
 				lastRoundTripTime = reply.RoundtripTime;
 				searchUrl = ipAddress.ToString();
 			}

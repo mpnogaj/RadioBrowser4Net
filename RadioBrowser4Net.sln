@@ -5,6 +5,8 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RadioBrowser4Net", "RadioBrowser4Net\RadioBrowser4Net.csproj", "{63647E9D-E73D-4E96-B744-E70A75EEC2A8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RadioBrowser4Net.Example", "RadioBrowser4Net.Example\RadioBrowser4Net.Example.csproj", "{6185B381-AF26-4716-A4F0-B5EE469800B2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{63647E9D-E73D-4E96-B744-E70A75EEC2A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63647E9D-E73D-4E96-B744-E70A75EEC2A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63647E9D-E73D-4E96-B744-E70A75EEC2A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6185B381-AF26-4716-A4F0-B5EE469800B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6185B381-AF26-4716-A4F0-B5EE469800B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6185B381-AF26-4716-A4F0-B5EE469800B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6185B381-AF26-4716-A4F0-B5EE469800B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

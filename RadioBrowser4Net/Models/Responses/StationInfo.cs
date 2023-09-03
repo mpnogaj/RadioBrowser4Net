@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json.Serialization;
 using System.Xml.Serialization;
+using RadioBrowser4Net.Internals;
 
 namespace RadioBrowser4Net.Models.Responses
 {
@@ -43,7 +44,7 @@ namespace RadioBrowser4Net.Models.Responses
 	    [JsonPropertyName("tags")]
 		public string TagsRaw { get; set; }
 		[JsonIgnore] 
-		public List<string> Tags => TagsRaw.Split(',').ToList();
+		public List<string> Tags => TagsRaw.ParseCommaSeparatedString();
 
 	    [Obsolete("Use CountryCode instead")]
 		[JsonPropertyName("country")]
@@ -58,12 +59,12 @@ namespace RadioBrowser4Net.Models.Responses
 		[JsonPropertyName("language")]
 		public string LanguagesRaw { get; set; }
 		[JsonIgnore] 
-		public List<string> Language => LanguagesRaw.Split(',').ToList();
+		public List<string> Language => LanguagesRaw.ParseCommaSeparatedString();
 
 		[JsonPropertyName("languagecodes")]
 		public string LanguageCodesRaw { get; set; }
         [JsonIgnore] 
-        public List<string> LanguageCodes => LanguageCodesRaw.Split(',').ToList();
+        public List<string> LanguageCodes => LanguageCodesRaw.ParseCommaSeparatedString();
 
 		[JsonPropertyName("votes")]
         public int Votes { get; set; }

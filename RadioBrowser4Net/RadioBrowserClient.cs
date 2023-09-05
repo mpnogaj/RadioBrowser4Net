@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -72,6 +73,9 @@ namespace RadioBrowser4Net
 		public async Task<List<StationInfo>?> ListAllStations(StationsListParams listParams)
 			=> await ListRequest<StationInfo>($"stations", listParams, null);
 
+		public async Task<IAsyncEnumerable<StationInfo?>?> AsyncListAllStations(StationsListParams listParams)
+			=> await AsyncEnumerableRequest<StationInfo>($"stations", listParams, null);
+
 		public async Task<List<StationCheckResult>?> ListStationsChecks(StationChecksListParams listParams, Guid? stationUuid = null)
 			=> await ListRequest<StationCheckResult>($"checks", listParams, stationUuid?.ToString() ?? null);
 
@@ -105,10 +109,38 @@ namespace RadioBrowser4Net
 
 		private async Task<T?> MakeGetRequest<T>(string url) where T : class
 		{
-			var resp = await _httpClient.GetAsync(url);
-			return resp.IsSuccessStatusCode
-				? JsonSerializer.Deserialize<T>(await resp.Content.ReadAsStreamAsync())
-				: null;
+			await using var resp = await _httpClient.GetStreamAsync(url);
+			return resp == null
+				? null
+				: await JsonSerializer.DeserializeAsync<T>(resp);
+		}
+
+		private async Task<IAsyncEnumerable<T?>?> AsyncEnumerableRequest<T>(string baseUrl,
+			object? listParams,
+			string? filter = null) where T : class
+		{
+			var queryString = GetQueryString(listParams);
+			var url = filter == null
+				? $"{baseUrl}{queryString}"
+				: $"{baseUrl}/{filter}{queryString}";
+
+			var stream = await _httpClient.GetStreamAsync(url);
+
+			return stream == null
+				? null
+				: GetAsyncEnumerableFromStream<T>(stream);
+		}
+
+		private static async IAsyncEnumerable<T?> GetAsyncEnumerableFromStream<T>(Stream stream)
+			where T : class
+		{
+			var data = JsonSerializer.DeserializeAsyncEnumerable<T>(stream);
+			await foreach (var x in data)
+			{
+				yield return x;
+			}
+
+			stream.Close();
 		}
 
 		private static string GetQueryString(object? obj)

@@ -46,68 +46,109 @@ namespace RadioBrowser4Net
 			_httpClient.DefaultRequestHeaders.Add("User-Agent", userAgent);
 		}
 
-		public async Task<List<CountryInfo>?> ListCountries(BasicListParams listParams, string? filter = null)
-			=> await ListRequest<CountryInfo>("countries", listParams, filter);
+		public Task<List<CountryInfo?>?> ListCountries(BasicListParams listParams, string? filter = null)
+			=> ListRequest<CountryInfo>("countries", listParams, filter);
 
+		public Task<IAsyncEnumerable<CountryInfo?>?> ListCountriesAsyncEnumerable(BasicListParams listParams, string? filter = null)
+			=> AsyncEnumerableRequest<CountryInfo>("countries", listParams, filter);
 
 		[Obsolete("Please use countries endpoint instead. It has name and countrycode information.")]
-		public async Task<List<CountryCodeInfo>?> ListCountryCodes(BasicListParams listParams, string? filter = null)
-			=> await ListRequest<CountryCodeInfo>("countrycodes", listParams, filter);
+		public Task<List<CountryCodeInfo?>?> ListCountryCodes(BasicListParams listParams, string? filter = null)
+			=> ListRequest<CountryCodeInfo>("countrycodes", listParams, filter);
 
-		public async Task<List<CodecInfo>?> ListCodecs(BasicListParams listParams, string? filter = null)
-			=> await ListRequest<CodecInfo>("codecs", listParams, filter);
+		[Obsolete("Please use countries endpoint instead. It has name and countrycode information.")]
+		public Task<IAsyncEnumerable<CountryCodeInfo?>?> ListCountryCodesAsyncEnumerable(BasicListParams listParams, string? filter = null)
+			=> AsyncEnumerableRequest<CountryCodeInfo>("countrycodes", listParams, filter);
 
-		public async Task<List<StateInfo>?> ListStates(BasicListParams listParams, string? filter = null)
-			=> await ListRequest<StateInfo>("states", listParams, filter);
+		public Task<List<CodecInfo?>?> ListCodecs(BasicListParams listParams, string? filter = null)
+			=> ListRequest<CodecInfo>("codecs", listParams, filter);
 
-		public async Task<List<LanguageInfo>?> ListLanguages(BasicListParams listParams, string? filter = null)
-			=> await ListRequest<LanguageInfo>("languages", listParams, filter);
+		public Task<IAsyncEnumerable<CodecInfo?>?> ListCodecsAsyncEnumerable(BasicListParams listParams, string? filter = null)
+			=> AsyncEnumerableRequest<CodecInfo>("codecs", listParams, filter);
 
-		public async Task<List<TagInfo>?> ListTags(BasicListParams listParams, string? filter = null)
-			=> await ListRequest<TagInfo>("tags", listParams, filter);
+		public Task<List<StateInfo?>?> ListStates(BasicListParams listParams, string? filter = null)
+			=> ListRequest<StateInfo>("states", listParams, filter);
 
-		public async Task<List<StationInfo>?> ListStations(StationsListParams listParams, StationsSearchBy searchBy,
+		public Task<IAsyncEnumerable<StateInfo?>?> ListStatesAsyncEnumerable(BasicListParams listParams, string? filter = null)
+			=> AsyncEnumerableRequest<StateInfo>("states", listParams, filter);
+
+		public Task<List<LanguageInfo?>?> ListLanguages(BasicListParams listParams, string? filter = null)
+			=> ListRequest<LanguageInfo>("languages", listParams, filter);
+
+		public Task<IAsyncEnumerable<LanguageInfo?>?> ListLanguagesAsyncEnumerable(BasicListParams listParams, string? filter = null)
+			=> AsyncEnumerableRequest<LanguageInfo>("languages", listParams, filter);
+
+		public Task<List<TagInfo?>?> ListTags(BasicListParams listParams, string? filter = null)
+			=> ListRequest<TagInfo>("tags", listParams, filter);
+
+		public Task<IAsyncEnumerable<TagInfo?>?> ListTagsAsyncEnumerable(BasicListParams listParams, string? filter = null)
+			=> AsyncEnumerableRequest<TagInfo>("tags", listParams, filter);
+
+		public Task<List<StationInfo?>?> ListStations(StationsListParams listParams, StationsSearchBy searchBy,
 			string searchTerm)
-			=> await ListRequest<StationInfo>($"stations/by{searchBy.ToString().ToLower()}", listParams, searchTerm);
+			=> ListRequest<StationInfo>($"stations/by{searchBy.ToString().ToLower()}", listParams, searchTerm);
 
-		public async Task<List<StationInfo>?> ListAllStations(StationsListParams listParams)
-			=> await ListRequest<StationInfo>($"stations", listParams, null);
+		public Task<IAsyncEnumerable<StationInfo?>?> ListStationsAsyncEnumerable(StationsListParams listParams, StationsSearchBy searchBy,
+			string searchTerm)
+			=> AsyncEnumerableRequest<StationInfo>($"stations/by{searchBy.ToString().ToLower()}", listParams, searchTerm);
 
-		public async Task<IAsyncEnumerable<StationInfo?>?> AsyncListAllStations(StationsListParams listParams)
-			=> await AsyncEnumerableRequest<StationInfo>($"stations", listParams, null);
+		public Task<List<StationInfo?>?> ListAllStations(StationsListParams listParams)
+			=> ListRequest<StationInfo>($"stations", listParams);
 
-		public async Task<List<StationCheckResult>?> ListStationsChecks(StationChecksListParams listParams, Guid? stationUuid = null)
-			=> await ListRequest<StationCheckResult>($"checks", listParams, stationUuid?.ToString() ?? null);
+		public Task<IAsyncEnumerable<StationInfo?>?> ListAllStationsAsyncEnumerable(StationsListParams listParams)
+			=> AsyncEnumerableRequest<StationInfo>($"stations", listParams);
 
-		public async Task<List<StationStepCheck>?> ListStationsCheckSteps(StationCheckStepsListParams listParams)
-			=> await ListRequest<StationStepCheck>($"checksteps", listParams);
+		public Task<List<StationCheckResult?>?> ListStationsChecks(StationChecksListParams listParams, Guid? stationUuid = null)
+			=> ListRequest<StationCheckResult>($"checks", listParams, stationUuid?.ToString() ?? null);
 
-		public async Task<List<StationClickInfo>?> ListStationsClicks(StationClicksListParams listParams, Guid? stationUuid = null)
-			=> await ListRequest<StationClickInfo>($"clicks", listParams, stationUuid?.ToString() ?? null);
+		public Task<IAsyncEnumerable<StationCheckResult?>?> ListStationsChecksAsyncEnumerable(StationChecksListParams listParams, Guid? stationUuid = null)
+			=> AsyncEnumerableRequest<StationCheckResult>($"checks", listParams, stationUuid?.ToString() ?? null);
 
-		public async Task<ClickActionResult?> ModifyStationClick(Guid stationUuid)
-			=> await MakeGetRequest<ClickActionResult>($"url/{stationUuid}");
+		public Task<List<StationStepCheck?>?> ListStationsCheckSteps(StationCheckStepsListParams listParams)
+			=> ListRequest<StationStepCheck>($"checksteps", listParams);
 
-		public async Task<List<StationInfo>?> SearchAdvancedStations(StationsAdvancedSearch searchParams)
-			=> await ListRequest<StationInfo>("stations/search", searchParams);
+		public Task<IAsyncEnumerable<StationStepCheck?>?> ListStationsCheckStepsAsyncEnumerable(StationCheckStepsListParams listParams)
+			=> AsyncEnumerableRequest<StationStepCheck>($"checksteps", listParams);
 
-		public async Task<List<StationInfo>?> SearchStationsByUuid(StationsSearchByUuid searchParams)
-			=> await ListRequest<StationInfo>("stations/byuuid", searchParams);
+		public Task<List<StationClickInfo?>?> ListStationsClicks(StationClicksListParams listParams, Guid? stationUuid = null)
+			=> ListRequest<StationClickInfo>($"clicks", listParams, stationUuid?.ToString() ?? null);
 
-		public async Task<List<StationInfo>?> SearchStationsByUrl(StationsSearchByUrl searchParams)
-			=> await ListRequest<StationInfo>("stations/byurl", searchParams);
+		public Task<IAsyncEnumerable<StationClickInfo?>?> ListStationsClicksAsyncEnumerable(StationClicksListParams listParams, Guid? stationUuid = null)
+			=> AsyncEnumerableRequest<StationClickInfo>($"clicks", listParams, stationUuid?.ToString() ?? null);
 
+		public Task<ClickActionResult?> ModifyStationClick(Guid stationUuid)
+			=> MakeGetRequest<ClickActionResult>($"url/{stationUuid}");
 
-		private async Task<List<T>?> ListRequest<T>(string baseUrl, object? listParams, string? filter = null)
+		public Task<List<StationInfo?>?> SearchAdvancedStations(StationsAdvancedSearch searchParams)
+			=> ListRequest<StationInfo>("stations/search", searchParams);
+
+		public Task<IAsyncEnumerable<StationInfo?>?> SearchAdvancedStationsAsyncEnumerable(StationsAdvancedSearch searchParams)
+			=> AsyncEnumerableRequest<StationInfo>("stations/search", searchParams);
+
+		public Task<List<StationInfo?>?> SearchStationsByUuid(StationsSearchByUuid searchParams)
+			=> ListRequest<StationInfo>("stations/byuuid", searchParams);
+
+		public Task<IAsyncEnumerable<StationInfo?>?> SearchStationsByUuidAsyncEnumerable(StationsSearchByUuid searchParams)
+			=> AsyncEnumerableRequest<StationInfo>("stations/byuuid", searchParams);
+
+		public Task<List<StationInfo?>?> SearchStationsByUrl(StationsSearchByUrl searchParams)
+			=> ListRequest<StationInfo>("stations/byurl", searchParams);
+		
+		public Task<IAsyncEnumerable<StationInfo?>?> SearchStationsByUrlAsyncEnumerable(StationsSearchByUrl searchParams)
+			=> AsyncEnumerableRequest<StationInfo>("stations/byurl", searchParams);
+
+		private async Task<List<T?>?> ListRequest<T>(string baseUrl, object? listParams, string? filter = null)
+			where T : class
 		{
 			var queryString = GetQueryString(listParams);
 			var url = filter == null
 				? $"{baseUrl}{queryString}"
 				: $"{baseUrl}/{filter}{queryString}";
-			return await MakeGetRequest<List<T>>(url);
+			return await MakeGetRequest<List<T?>>(url);
 		}
 
-		private async Task<T?> MakeGetRequest<T>(string url) where T : class
+		private async Task<T?> MakeGetRequest<T>(string url)
+			where T : class
 		{
 			await using var resp = await _httpClient.GetStreamAsync(url);
 			return resp == null

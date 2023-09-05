@@ -5,7 +5,7 @@ using RadioBrowser4Net.Models.Params;
 var client = new RadioBrowserClient();
 
 var stationNames = new List<string>();
-var stations = await client.AsyncListAllStations(new StationsListParams
+var stations = await client.ListAllStationsAsyncEnumerable(new StationsListParams
 {
 	HideBroken = false,
 	Limit = 1000000,
@@ -34,10 +34,7 @@ var stations2 = await client.ListAllStations(new StationsListParams
 
 if (stations2 != null)
 {
-	foreach (var station in stations2)
-	{
-		stationNames.Add(station.Name);
-	}
+	stationNames.AddRange(stations2.Select(station => station.Name));
 }
 
 Console.WriteLine(stationNames.Count);
